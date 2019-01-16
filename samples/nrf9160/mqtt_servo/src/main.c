@@ -9,6 +9,7 @@
 #include <uart.h>
 #include <string.h>
 #include <at_host.h>
+#include <dk_buttons_and_leds.h>
 
 #include <net/mqtt.h>
 #include <net/socket.h>
@@ -16,12 +17,16 @@
 
 #include <pwm.h>
 
-#define PWM_DRIVER CONFIG_PWM_0_NAME
-#define PWM_CHANNEL 10
-#define PERIOD (USEC_PER_SEC / 50)
+#define PWM_DRIVER 		CONFIG_PWM_0_NAME
+#define PWM_CHANNEL 		10
+#define PERIOD 			(USEC_PER_SEC / 50)
 
-#define MINPULSEWIDTH 700
-#define MAXPULSEWIDTH 2300
+#define MINPULSEWIDTH 		700
+#define MAXPULSEWIDTH		2300
+
+#define LEDS_CONNECTING		DK_LED1_MSK
+#define LEDS_LTE_CONNECTED	DK_LED2_MSK
+#define LEDS_MQTT_CONNECTED	DK_LED3_MSK
 
 /* Buffers for MQTT client. */
 static u8_t rx_buffer[CONFIG_MQTT_MESSAGE_BUFFER_SIZE];
@@ -211,7 +216,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 					printk("str=%s value=%d\n", str, value);
 					if ((value >= 0) && (value <= 100)) {
 						servo_set(value);
-					} 
+					}
 				}
 			}
 			/* Echo back received data */
@@ -249,7 +254,7 @@ void mqtt_evt_handler(struct mqtt_client *const c,
 	}
 }
 
-/**@brief Resolves the configured hostname and 
+/**@brief Resolves the configured hostname and
  * initializes the MQTT broker structure
  */
 static void broker_init(void)
@@ -350,11 +355,32 @@ static void modem_configure(void)
 	}
 }
 
+/**@brief Initializes buttons and LEDs, using the DK buttons and LEDs
+ * library.
+ */
+static void buttons_leds_init(void)
+{
+	int err;
+
+	err = dk_leds_init();
+	if (err) {
+		printk("Could not initialize leds, err code: %d\n", err);
+	}
+
+	err = dk_set_leds_state(0x00, DK_ALL_LEDS_MSK);
+	if (err) {
+		printk("Could not set leds state, err code: %d\n", err);
+	}
+}
+
 void main(void)
 {
 	int err;
 
 	printk("The MQTT servo sample started\n");
+
+	buttons_leds_init();
+	dk_set_leds(LEDS_CONNECTING);
 
 	err = servo_init();
 	if (err) {
@@ -364,6 +390,7 @@ void main(void)
 	servo_set(50);
 
 	modem_configure();
+	dk_set_leds(LEDS_LTE_CONNECTED);
 
 	if (IS_ENABLED(CONFIG_AT_HOST_LIBRARY)) {
 		err = at_host_init(CONFIG_AT_HOST_UART,
@@ -373,6 +400,7 @@ void main(void)
 			return;
 		}
 	}
+
 	if (IS_ENABLED(CONFIG_MQTT_LIB)) {
 		client_init(&client);
 
@@ -381,6 +409,7 @@ void main(void)
 			printk("ERROR: mqtt_connect. %d\n", err);
 			return;
 		}
+		dk_set_leds(LEDS_MQTT_CONNECTED);
 	}
 
 	while (1) {
