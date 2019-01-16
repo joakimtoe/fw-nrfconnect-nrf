@@ -17,8 +17,8 @@
 
 #include <pwm.h>
 
-#define PWM_DRIVER 		CONFIG_PWM_0_NAME
-#define PWM_CHANNEL 		10
+#define PWM_DRIVER 		PWM_0_LABEL
+#define PWM_CHANNEL 		PWM_0_CH0_PIN
 #define PERIOD 			(USEC_PER_SEC / 50)
 
 #define MINPULSEWIDTH 		900
