@@ -110,11 +110,9 @@ static const enum nrf_cloud_sensor available_sensors[] = {
 	NRF_CLOUD_SENSOR_FLIP,
 	NRF_CLOUD_SENSOR_BUTTON,
 	NRF_CLOUD_SENSOR_TEMP,
-#if defined(CONFIG_BOARD_NRF9160_PCA20035)
 	NRF_CLOUD_SENSOR_HUMID,
 	NRF_CLOUD_SENSOR_AIR_PRESS
 	/* NRF_CLOUD_SENSOR_AIR_QUAL */
-#endif
 };
 
 static struct env_sensor temp_sensor = {
@@ -123,7 +121,6 @@ static struct env_sensor temp_sensor = {
 	.dev_name = CONFIG_TEMP_DEV_NAME
 };
 
-#if defined(CONFIG_BOARD_NRF9160_PCA20035)
 static struct env_sensor humid_sensor = {
 	.type = NRF_CLOUD_SENSOR_HUMID,
 	.channel = SENSOR_CHAN_HUMIDITY,
@@ -135,14 +132,12 @@ static struct env_sensor press_sensor = {
 	.channel = SENSOR_CHAN_PRESS,
 	.dev_name = CONFIG_TEMP_DEV_NAME
 };
-#endif
+
 /* Array containg environment sensors available on the board. */
 static struct env_sensor *env_sensors[] = {
 	&temp_sensor,
-#if defined(CONFIG_BOARD_NRF9160_PCA20035)
 	&humid_sensor,
 	&press_sensor
-#endif
 };
 
  /* Variables to keep track of nRF cloud user association. */
