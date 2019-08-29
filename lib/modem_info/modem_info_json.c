@@ -242,6 +242,24 @@ int modem_info_json_object_encode(struct modem_param_info *modem,
 			     cJSON_PrintUnformatted(device_obj));
 	}
 
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_SERVICES)) {
+		if(IS_ENABLED(CONFIG_AWS_FOTA)) {
+			cJSON *json_array;
+			const char * array[] = {(const char *)&"dfu"};
+			json_array = cJSON_CreateStringArray(array, 1);
+			if (json_array == NULL) {
+				goto delete_object;
+			}
+
+			ret = json_add_obj(root_obj, "serviceInfo", json_array);
+			if (ret < 0) {
+				total_len = ret;
+				goto delete_object;
+			}
+			total_len += ret;
+		}
+	}
+
 delete_object:
 	cJSON_Delete(network_obj);
 	cJSON_Delete(sim_obj);

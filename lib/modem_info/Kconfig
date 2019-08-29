@@ -78,6 +78,13 @@ config MODEM_INFO_ADD_DEVICE_APP_NAME
 
 endif # MODEM_INFO_ADD_DEVICE
 
+config MODEM_INFO_ADD_SERVICES
+	bool "Add the service information."
+	default y
+	help
+	  Add the device information to the returned
+	  device JSON object.
+
 config MODEM_INFO_ADD_BOARD
 	bool "Add board name to JSON string"
 	default y
