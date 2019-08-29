@@ -365,10 +365,12 @@ int aws_fota_mqtt_evt_handler(struct mqtt_client *const client,
 			return err;
 		}
 
-		err = update_device_shadow_version(client);
-		if (err) {
-			LOG_ERR("Unable to update device shadow");
-			return err;
+		if(IS_ENABLED(CONFIG_DEVICE_SHADOW_UPDATE_APP_VERSION)){
+			err = update_device_shadow_version(client);
+			if (err) {
+				LOG_ERR("Unable to update device shadow");
+				return err;
+			}
 		}
 
 		return 0;
