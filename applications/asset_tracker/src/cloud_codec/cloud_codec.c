@@ -193,7 +193,7 @@ static const char *const channel_type_str[] = {
 	[CLOUD_CHANNEL_AIR_PRESS] = "AIR_PRESS",
 	[CLOUD_CHANNEL_AIR_QUAL] = "AIR_QUAL",
 	[CLOUD_CHANNEL_LTE_LINK_RSRP] = "RSRP",
-	[CLOUD_CHANNEL_DEVICE_INFO] = "DEVICE",
+	[CLOUD_CHANNEL_DEVICE_INFO] = "device",
 };
 
 static cloud_cmd_cb_t cloud_command_cb;
