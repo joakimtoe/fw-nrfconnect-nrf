@@ -54,6 +54,30 @@ config MODEM_INFO_ADD_DEVICE
 	  Add the device information to the returned
 	  device JSON object.
 
+if MODEM_INFO_ADD_DEVICE
+
+config MODEM_INFO_ADD_DEVICE_MODEM_FW
+	bool "Add modem FW version" 
+	default y
+
+config MODEM_INFO_ADD_DEVICE_BATTERY
+	bool "Add battery level" 
+	default y
+
+config MODEM_INFO_ADD_DEVICE_BOARD
+	bool "Add board name" 
+	default y
+
+config MODEM_INFO_ADD_DEVICE_APP_VERSION
+	bool "Add application version" 
+	default y
+
+config MODEM_INFO_ADD_DEVICE_APP_NAME
+	bool "Add application name"
+	default y
+
+endif # MODEM_INFO_ADD_DEVICE
+
 config MODEM_INFO_ADD_BOARD
 	bool "Add board name to JSON string"
 	default y

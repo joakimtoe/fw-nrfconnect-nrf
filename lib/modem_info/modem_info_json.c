@@ -165,11 +165,21 @@ static int device_data_add(struct device_param *device, cJSON *json_obj)
 		return -EINVAL;
 	}
 
-	total_len = json_add_data(&device->modem_fw, json_obj);
-	total_len += json_add_data(&device->battery, json_obj);
-	total_len += json_add_str(json_obj, "board", device->board);
-	total_len += json_add_str(json_obj, "appVersion", device->app_version);
-	total_len += json_add_str(json_obj, "appName", device->app_name);
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_DEVICE_MODEM_FW)) {
+		total_len = json_add_data(&device->modem_fw, json_obj);
+	}
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_DEVICE_BATTERY)) {
+		total_len += json_add_data(&device->battery, json_obj);
+	}
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_DEVICE_BOARD)) {
+		total_len += json_add_str(json_obj, "board", device->board);
+	}
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_DEVICE_APP_VERSION)) {
+		total_len += json_add_str(json_obj, "appVersion", device->app_version);
+	}
+	if(IS_ENABLED(CONFIG_MODEM_INFO_ADD_DEVICE_APP_NAME)) {
+		total_len += json_add_str(json_obj, "appName", device->app_name);
+	}
 
 	return total_len;
 }
